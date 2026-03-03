@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="ja" data-theme="light" style=""><head>
-    <meta charset="UTF-8">
+<!-- saved from url=(0044)https://www.genspark.ai/api/files/s/4zRtwSra -->
+<html lang="ja" data-theme="light"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OJT育成診断（簡易版）</title>
     <!-- Pico CSS for clean base styling -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link rel="stylesheet" href="./index_files/pico.min.css">
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&amp;display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="./index_files/css2" rel="stylesheet">
 
     <style>
       :root {
@@ -224,7 +225,7 @@
       }
     </style>
   </head>
-  <body style="">
+  <body>
     <main>
       <!-- 1. Start Screen -->
       <div id="start-screen" class="screen active">
@@ -276,7 +277,6 @@
             仕組みもスキルも高い理想的な状態です。この体制を維持し、さらに洗練させていきましょう。
           </div>
         </div>
-
 
         <button onclick="restartDiagnosis()">もう一度診断する</button>
       </div>
@@ -437,23 +437,37 @@
           resultType: resultType,
         };
 
-        // Send POST request
+        console.log('Sending data to Google Sheets:', data);
+
+        // Send POST request using URLSearchParams for form-data format
+        const formData = new URLSearchParams();
+        formData.append('timestamp', data.timestamp);
+        formData.append('answers', data.answers);
+        formData.append('mechScore', data.mechScore);
+        formData.append('skillScore', data.skillScore);
+        formData.append('resultType', data.resultType);
+
         fetch(GAS_URL, {
           method: 'POST',
-          mode: 'no-cors', // Important for GAS
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
+          body: formData,
         })
-          .then(() => console.log('Data sent to Google Sheets'))
-          .catch((err) => console.error('Error sending data:', err));
+          .then((response) => {
+            console.log('Response received:', response);
+            return response.text();
+          })
+          .then((text) => {
+            console.log('Data sent successfully:', text);
+          })
+          .catch((err) => {
+            console.error('Error sending data:', err);
+          });
       }
 
       function restartDiagnosis() {
         startDiagnosis();
       }
     </script>
-  
+  <script defer="" src="./index_files/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon="{&quot;rayId&quot;:&quot;9d64c231eaa7635d&quot;,&quot;serverTiming&quot;:{&quot;name&quot;:{&quot;cfExtPri&quot;:true,&quot;cfEdge&quot;:true,&quot;cfOrigin&quot;:true,&quot;cfL4&quot;:true,&quot;cfSpeedBrain&quot;:true,&quot;cfCacheStatus&quot;:true}},&quot;version&quot;:&quot;2025.9.1&quot;,&quot;token&quot;:&quot;4edd5f8ec12a48cfa682ab8261b80a79&quot;}" crossorigin="anonymous"></script>
+
 
 </body></html>
